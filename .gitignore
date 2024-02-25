@@ -1,0 +1,24 @@
+*.dll
+*.so
+# Compiled Static libraries
+ *.lai
+ *.la
+ *.a
+ *.lib
+
+ # Executables
+ *.exe
+ *.out
+ *.app
+ .DS_Store
+ .vscode/*
+ build/*
+
+ # Log files
+ *_log.txt
+ *_log_*
+
+ # Dependencies
+ ext/*
+ deps/*
+
