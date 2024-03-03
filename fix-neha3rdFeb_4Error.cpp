@@ -9,42 +9,48 @@ using namespace std;
 
 bool isAlphabet(char c) { return isalpha(static_cast<unsigned char>(c)) != 0; }
 
-void WrongQuestionFrequency(vector<size_t>& wrongAnsQuestions,
+void WrongQuestionFrequency(vector<size_t> &wrongAnsQuestions,
                             const size_t numOfScores) {
-    // Calculate the threshold for the 60% miss rate
-    size_t wrongQThreshold = static_cast<size_t>(0.6 * numOfScores) + 1;
+  cout << "MOST MISSED QUESTIONS " << endl;
+  if (wrongAnsQuestions.empty()) {
+    return;
+  }
+  // Calculate the threshold for the 60% miss rate
+  size_t wrongQThreshold =
+      static_cast<size_t>(0.6 * static_cast<double>(numOfScores)) + 1;
 
-    // Sort the array of wrong questions
-    sort(wrongAnsQuestions.begin(), wrongAnsQuestions.end());
+  // Sort the array of wrong questions
+  sort(wrongAnsQuestions.begin(), wrongAnsQuestions.end());
 
-    cout << "MOST MISSED QUESTIONS:" << endl;
+  // Initialize variables for tracking repetitions
+  size_t currentQuestion = wrongAnsQuestions[0];
+  size_t repCount = 1;
 
-    // Initialize variables for tracking repetitions
-    size_t currentQuestion = wrongAnsQuestions[0];
-    size_t repCount = 1;
-
-    for (size_t i = 1; i < wrongAnsQuestions.size(); ++i) {
-        if (wrongAnsQuestions[i] == currentQuestion) {
-            // Same question, increment repetition count
-            ++repCount;
-        } else {
-            // Different question, calculate miss percentage
-            double missPercentage = (static_cast<double>(repCount) / numOfScores) * 100;
-            if (repCount >= wrongQThreshold) {
-                cout << currentQuestion << "\t" << missPercentage << "%" << endl;
-            }
-
-            // Update current question and reset repetition count
-            currentQuestion = wrongAnsQuestions[i];
-            repCount = 1;
-        }
-    }
-
-    // Print info for the last question
-    double missPercentage = (static_cast<double>(repCount) / numOfScores) * 100;
-    if (repCount >= wrongQThreshold) {
+  for (size_t i = 1; i < wrongAnsQuestions.size(); ++i) {
+    if (wrongAnsQuestions[i] == currentQuestion) {
+      // Same question, increment repetition count
+      ++repCount;
+    } else {
+      // Different question, calculate miss percentage
+      double missPercentage =
+          (static_cast<double>(repCount) / static_cast<double>(numOfScores)) *
+          100;
+      if (repCount >= wrongQThreshold) {
         cout << currentQuestion << "\t" << missPercentage << "%" << endl;
+      }
+
+      // Update current question and reset repetition count
+      currentQuestion = wrongAnsQuestions[i];
+      repCount = 1;
     }
+  }
+
+  // Print info for the last question
+  double missPercentage =
+      (static_cast<double>(repCount) / static_cast<double>(numOfScores)) * 100;
+  if (repCount >= wrongQThreshold) {
+    cout << currentQuestion << "\t" << missPercentage << "%" << endl;
+  }
 }
 
 // Function to calculate the mode
@@ -126,21 +132,25 @@ double calculateMean(double *contestantScores, const size_t numOfScores) {
   for (size_t i = 0; i < numOfScores; i++) {
     sumOfScores += *(contestantScores + i);
   }
-  return sumOfScores / numOfScores;
+  return sumOfScores / static_cast<double>(numOfScores);
 }
 
 // function to calculate score
 double calculateScore(string *correctAnswers, string *contestantAnswers,
                       const size_t numOfQuestions) {
-  /*int correct = 0;
-  for (int i = 0; i < numOfQuestions; i++) {
+  size_t correct = 0;
+  for (size_t i = 0; i < numOfQuestions; i++) {
       if (correctAnswers[i].compare(contestantAnswers[i]) == 0) {
           correct++;
       }
   }
-  */
+  
+  // std::cout << "correct: " << correct << "\n";
+  // std::cout << "numOfQuestions: " << numOfQuestions << "\n";
+  return (static_cast<double>(correct) / static_cast<double>(numOfQuestions)) *
+         100;
 
-  int correct = 0;
+  // int correct = 0;
   correctAnswers += numOfQuestions - 1;  // why are we doing += instead of just
                                          // =
   contestantAnswers += numOfQuestions - 1;
@@ -152,7 +162,10 @@ double calculateScore(string *correctAnswers, string *contestantAnswers,
     correctAnswers--;
     contestantAnswers--;
   }
-  return (static_cast<double>(correct) / numOfQuestions) * 100;
+  // std::cout << "correct: " << correct << "\n";
+  // std::cout << "numOfQuestions: " << numOfQuestions << "\n";
+  return (static_cast<double>(correct) / static_cast<double>(numOfQuestions)) *
+         100;
 }
 
 int main() {
