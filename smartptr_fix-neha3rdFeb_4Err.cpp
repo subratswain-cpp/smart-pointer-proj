@@ -9,8 +9,8 @@ using namespace std;
 
 bool isAlphabet(char c) { return isalpha(static_cast<unsigned char>(c)) != 0; }
 
-// Calculate and print MOST MISSED QUESTIONS 
-void WrongQuestionFrequency(vector<size_t> &wrongAnsQuestions,
+// Calculate and print MOST MISSED QUESTIONS
+void WrongQuestionFrequency(vector<size_t>& wrongAnsQuestions,
                             const size_t numOfScores) {
   cout << "MOST MISSED QUESTIONS " << endl;
   if (wrongAnsQuestions.empty()) {
@@ -55,10 +55,9 @@ void WrongQuestionFrequency(vector<size_t> &wrongAnsQuestions,
 }
 
 // Function to calculate the mode
-// double *calculateMode(double *contestantScores, const size_t numOfScores,
-//                       long unsigned int &numModes) { // TODO
-std::unique_ptr<double[]> calculateMode(unique_ptr<double[]>& contestantScores, const size_t numOfScores,
-                      size_t &numModes) { 
+std::unique_ptr<double[]> calculateMode(unique_ptr<double[]>& contestantScores,
+                                        const size_t numOfScores,
+                                        size_t& numModes) {
   // Sort the array
   sort(contestantScores.get(), contestantScores.get() + numOfScores);
 
@@ -95,11 +94,9 @@ std::unique_ptr<double[]> calculateMode(unique_ptr<double[]>& contestantScores, 
   }
 
   // Allocate memory for array of modes
-  // double *modeArray = new double[modes.size()]; // TODO
-  std::unique_ptr<double[]> modeArrayPtr = std::make_unique<double[]>(modes.size());
-  // double *modeArray = modeArrayPtr.get();
+  std::unique_ptr<double[]> modeArrayPtr =
+      std::make_unique<double[]>(modes.size());
   for (size_t i = 0; i < modes.size(); ++i) {
-    // modeArray[i] = modes[i]; // TODO
     modeArrayPtr[i] = modes[i];
   }
 
@@ -107,61 +104,58 @@ std::unique_ptr<double[]> calculateMode(unique_ptr<double[]>& contestantScores, 
   numModes = modes.size();
 
   // Return pointer to array of modes
-  // return modeArray; // TODO
   return modeArrayPtr;
 }
 
 // function calculate the median
-double calculateMedian(unique_ptr<double[]>& contestantScores, const size_t numOfScores) {
+double calculateMedian(unique_ptr<double[]>& contestantScores,
+                       const size_t numOfScores) {
   // Sort the array
-    std::sort(contestantScores.get(), contestantScores.get() + numOfScores);
+  std::sort(contestantScores.get(), contestantScores.get() + numOfScores);
 
-    // Calculate the median
-    size_t medianIndex = numOfScores / 2;
-    double median = contestantScores[medianIndex];
+  // Calculate the median
+  size_t medianIndex = numOfScores / 2;
+  double median = contestantScores[medianIndex];
 
-    if (numOfScores % 2 == 0) {
-        // For even number of scores, take the average of the middle two elements
-        median += contestantScores[medianIndex - 1];
-        median /= 2.0;
-    }
+  if (numOfScores % 2 == 0) {
+    // For even number of scores, take the average of the middle two elements
+    median += contestantScores[medianIndex - 1];
+    median /= 2.0;
+  }
 
-    return median;
+  return median;
 }
 
 // function to calculate the mean
-double calculateMean(const unique_ptr<double[]>& contestantScores, const size_t numOfScores) {
+double calculateMean(const unique_ptr<double[]>& contestantScores,
+                     const size_t numOfScores) {
   double sumOfScores{};
   for (size_t i = 0; i < numOfScores; i++) {
     // sumOfScores += *(contestantScores + i);
     sumOfScores += contestantScores[i];
   }
-  // return sumOfScores / numOfScores;
-  // return sumOfScores / static_cast<double>(numOfScores);
-  return sumOfScores / numOfScores;
+
+  return sumOfScores / static_cast<double>(numOfScores);
 }
 
 // function to calculate score
-// double calculateScore(string *correctAnswers, string *contestantAnswers,
-//                       const size_t numOfQuestions) { // TODO
 double calculateScore(unique_ptr<string[]>& correctAnswers,
                       unique_ptr<string[]>& contestantAnswers,
                       const size_t numOfQuestions) {
-
-    size_t correct = 0;
+  size_t correct = 0;
   for (size_t i = 0; i < numOfQuestions; i++) {
-      if (correctAnswers[i].compare(contestantAnswers[i]) == 0) {
-          correct++;
-      }
+    if (correctAnswers[i].compare(contestantAnswers[i]) == 0) {
+      correct++;
+    }
   }
 
   return (static_cast<double>(correct) / static_cast<double>(numOfQuestions)) *
          100;
 
-
   // int correct = 0;
-  
-  // correctAnswers += numOfQuestions - 1;  // why are we doing += instead of just
+
+  // correctAnswers += numOfQuestions - 1;  // why are we doing += instead of
+  // just
   //                                        // =
   // contestantAnswers += numOfQuestions - 1;
 
@@ -217,9 +211,8 @@ int main() {
   ansKeyFile.seekg(0);  // Move file pointer to the beginning
 
   // create dynamic allocated array for answerkey & add values in
-  // string *correctAnswers =
-  //     new string[numQuestions];  // make numQuestions long unsigned int // TODO
-  std::unique_ptr<string[]> correctAnswers = std::make_unique<string[]>(numQuestions);    
+  std::unique_ptr<string[]> correctAnswers =
+      std::make_unique<string[]>(numQuestions);
   size_t index = 0;
   while (ansKeyFile.get(answer)) {
     if (isAlphabet(answer)) {  // TODO: check for space here aswell like before
@@ -233,8 +226,8 @@ int main() {
   while (getline(contestAnsFile, fakeLine)) {
     numOfScores++;
   }
-  // double *contestantScores = new double[numOfScores]; // TODO
-  unique_ptr<double[]> contestantScores = std::make_unique<double[]>(numOfScores);
+  unique_ptr<double[]> contestantScores =
+      std::make_unique<double[]>(numOfScores);
   size_t cScoreIndex = 0;
 
   // Reset the file pointer to the beginning of the file
@@ -261,8 +254,8 @@ int main() {
     string contestantID = line.substr(0, spacePos);
 
     // create dynamic allocated array for contestant answers
-    // string *contestantAnswers = new string[numQuestions]; // TODO
-    unique_ptr<string[]> contestantAnswers = make_unique<string[]>(numQuestions);
+    unique_ptr<string[]> contestantAnswers =
+        make_unique<string[]>(numQuestions);
 
     /// add values in the dynamic array from each line
     unsigned long x = 11;
@@ -271,8 +264,7 @@ int main() {
     for (size_t i = 0; i < numQuestions; i++) {
       // contestantAnswers[i] = line[x]; // going through a array of character
       // which is the string
-      // *(contestantAnswers + i) = line.at(x); // TODO
-       contestantAnswers[i] = line.at(x);
+      contestantAnswers[i] = line.at(x);
       x = x + 2;
     }
 
@@ -281,7 +273,6 @@ int main() {
         calculateScore(correctAnswers, contestantAnswers, numQuestions);
 
     // Add score to the array
-    // *(contestantScores + cScoreIndex) = score; // TODO: delete
     contestantScores[cScoreIndex] = score;
     cScoreIndex++;
 
@@ -293,7 +284,6 @@ int main() {
 
     // Question number of wrong answer
     for (size_t i = 0; i < numQuestions; ++i) {
-      // if (*(correctAnswers + i) != *(contestantAnswers + i)) { // TODO
       if (correctAnswers[i] != contestantAnswers[i]) {
         cout << i + 1 << " ";
         wrongAnsQuestions.push_back(i + 1);
@@ -316,9 +306,6 @@ int main() {
       }
     }
     cout << endl;
-
-    // Clean up contestant answers array
-    // delete[] contestantAnswers; // TODO
   }
 
   // make the printing modular - create a print function, cout the results there
@@ -334,18 +321,16 @@ int main() {
   // create a pointer variable to receive the pointer and create a forloop to
   // run through the mode dynamic array using a pointer,
   long unsigned int numModes = 0;
-  unique_ptr<double[]> modes = calculateMode(contestantScores, numOfScores, numModes);
+  unique_ptr<double[]> modes =
+      calculateMode(contestantScores, numOfScores, numModes);
 
   cout << "Mode: ";
   for (long unsigned i = 0; i < numModes; ++i) {
     // 1. print the Mode
-    // cout << modes[i];
-    // cout << *(modes + i); // TODO
-    cout << (modes[i]); //
+    cout << modes[i];
 
     /* check if there are more elements
      */
-
     if (i < (numModes - 1)) {
       cout << ", ";
     } else {
