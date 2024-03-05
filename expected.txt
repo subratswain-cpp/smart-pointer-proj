@@ -14,3 +14,11 @@ A C D
 4 9 10 
 D A A 
 A C D 
+
+Mean: 67.50
+Median: 70.00
+Mode: 70.00
+
+MOST MISSED QUESTIONS 
+9	75.00%
+10	75.00%

@@ -4,42 +4,14 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+// Sunday...
 using namespace std;
 
 bool isAlphabet(char c) { return isalpha(static_cast<unsigned char>(c)) != 0; }
 
-// Function to calculate if the missed question percentage is 60% or more
-void WrongQuestionFrequency(vector<size_t> &wrongAnsQuestions, const size_t numOfScores) {
-  // Calculate the 60% miss rate for num of scores
-  int wrongQRate = static_cast<int>(0.6 * numOfScores) + 1;
-  cout << "MOST MISSED QUESTIONS " << endl;
-
-  // Go through the vector from the parameter
-  for (size_t i = 0; i < wrongAnsQuestions.size(); ++i) {
-    size_t currentQuestion = wrongAnsQuestions.at(i);
-    int repCount = 1;
-
-    // Count how many times the current question is repeated in the vector
-    for (size_t j = i + 1; j < wrongAnsQuestions.size(); ++j) {
-      if (wrongAnsQuestions.at(j) == currentQuestion) {
-        repCount++;
-      }
-    }
-
-    // Calculate the percentage of missed questions
-    double missPercentage = (static_cast<double>(repCount) / numOfScores) * 100;
-
-    // If repCount is equal to or more than the wrongQrate, print info
-    if (repCount >= wrongQRate) {
-      cout << currentQuestion << "\t" << missPercentage << "%" << endl;
-    }
-  }
-}
-
 // Function to calculate the mode
-double *calculateMode(double *contestantScores, const size_t numOfScores,
-                      long unsigned int &numModes) {
+double *calculateMode(double *contestantScores, int numOfScores,
+                      int &numModes) {
   sort(contestantScores, contestantScores + numOfScores);
 
   vector<double> modes;
@@ -49,7 +21,7 @@ double *calculateMode(double *contestantScores, const size_t numOfScores,
   int currentCount = 1;
   int maxCount = 1;
 
-  for (size_t i = 1; i < numOfScores; ++i) {
+  for (int i = 1; i < numOfScores; ++i) {
     if (contestantScores[i] == contestantScores[i - 1]) {
       currentCount++;
     } else {
@@ -86,20 +58,113 @@ double *calculateMode(double *contestantScores, const size_t numOfScores,
   // Return pointer to array of modes
   return modeArray;
 }
+/*
+// Function to calculate the mode - version 2 - returns one mode correctly, not
+multiple modes double* calculateMode(double *contestantScores, int numOfScores)
+{ sort(contestantScores, contestantScores + numOfScores);
+
+    vector<double> modes;
+    vector<int> repCount;
+
+    double currentMode = contestantScores[0];
+    int currentCount = 1;
+    int maxCount = 1;
+
+    for (int i = 1; i < numOfScores; ++i) {
+        if (contestantScores[i] == contestantScores[i - 1]) {
+            currentCount++;
+        } else {
+            if (currentCount > maxCount) {
+                maxCount = currentCount;
+                modes.clear();
+                modes.push_back(currentMode);
+            } else if (currentCount == maxCount) {
+                modes.push_back(currentMode);
+            }
+
+            currentMode = contestantScores[i];
+            currentCount = 1;
+        }
+    }
+
+    // Check for mode at the end of the array
+    if (currentCount > maxCount) {
+        modes.clear();
+        modes.push_back(currentMode);
+    } else if (currentCount == maxCount) {
+        modes.push_back(currentMode);
+    }
+
+    // Allocate memory for array of modes
+    double *modeArray = new double[modes.size()];
+    for (size_t i = 0; i < modes.size(); ++i) {
+        modeArray[i] = modes[i];
+    }
+
+    // Return pointer to array of modes
+    return modeArray;
+}
+*/
+/*function to calculate the mode (version 1)
+double* calculateMode(double *contestantScores, int numOfScores){
+    sort(contestantScores, contestantScores+numOfScores);
+    vector<double> modes;
+    vector<double> repCount;
+    double compareVariable = 0;
+
+    //create vector(because we don't know length of num of modes for array) for
+repetitionCount and store all the time that variable incremetns for a vairable.
+store its highest value for each variable
+
+    for(int i=0; i<numOfScores; i++){ //start for loop to update the the compare
+variable variable = *(contestantScores + i );// update compare variable int
+repetitionCount=0; for(int j=0; j<numOfScores; j++){ //for loop to update the
+pointer if(variable == *(contestantScores + j )){ repetitionCount++;
+            }
+        }
+        if (repetitionCount > 0){ //store the repetitionCount variable in its
+vector here reCount.push_back(repetitionCount)
+        }
+
+        if (repetitionCount > 0){ // you might not even need this vector, you
+can just find the corresponding value in the array itself
+            modes.push_back(variable);
+        }
+
+    }
+    for (int i = 0; i < repCount.size()-1; ++i) {
+        double compareVal = repCount[i];  //TOASK: can you use bracket notation
+while using vectors for (int j = 0; j < repCount.size()-1; ++j){
+            if(compareVal>repCount)
+
+        }
+    }
+
+
+    // go through the repetition vector and see what is it's highest
+value/values (first see how many highvalues you have)
+        //create a dynamic array and store all modes
+        //change function return type to pointer
+        //if single value, find the corresponding array value and save it in the
+mode array
+        // if multiple high values, find the corresponding array values and save
+it in the mode array
+        // return the mode arraypointer
+
+}
+*/
 
 // function calculate the median
-double calculateMedian(double *contestantScores, const size_t numOfScores) {
+double calculateMedian(double *contestantScores, int numOfScores) {
   int medianIndex;
   double median;
   sort(contestantScores, contestantScores + numOfScores);
-  if (numOfScores % 2 == 1) {  // if the numOfScores is odd
+  if (numOfScores % 2 == 1) {
     medianIndex = static_cast<int>(numOfScores / 2);
     median = *(contestantScores + medianIndex);
 
-  }
-
-  else {  // if the numOfScores is even
-    medianIndex = (static_cast<int>(numOfScores / 2)) - 1;
+  } else {
+    medianIndex = static_cast<int>(numOfScores / 2);
     median = *(contestantScores + medianIndex);
 
     medianIndex++;
@@ -111,9 +176,9 @@ double calculateMedian(double *contestantScores, const size_t numOfScores) {
 }
 
 // function to calculate the mean
-double calculateMean(double *contestantScores, const size_t numOfScores) {
+double calculateMean(double *contestantScores, int numOfScores) {
   double sumOfScores{};
-  for (size_t i = 0; i < numOfScores; i++) {
+  for (int i = 0; i < numOfScores; i++) {
     sumOfScores += *(contestantScores + i);
   }
   return sumOfScores / numOfScores;
@@ -121,7 +186,7 @@ double calculateMean(double *contestantScores, const size_t numOfScores) {
 
 // function to calculate score
 double calculateScore(string *correctAnswers, string *contestantAnswers,
-                      const size_t numOfQuestions) {
+                      int numOfQuestions) {
   /*int correct = 0;
   for (int i = 0; i < numOfQuestions; i++) {
       if (correctAnswers[i].compare(contestantAnswers[i]) == 0) {
@@ -135,7 +200,7 @@ double calculateScore(string *correctAnswers, string *contestantAnswers,
                                          // =
   contestantAnswers += numOfQuestions - 1;
 
-  for (size_t i = 0; i < numOfQuestions; i++) {
+  for (int i = 0; i < numOfQuestions; i++) {
     if (*correctAnswers == *contestantAnswers) {
       correct++;
     }
@@ -146,7 +211,7 @@ double calculateScore(string *correctAnswers, string *contestantAnswers,
 }
 
 int main() {
-   string ansKeyFileName = "answers.txt";
+  string ansKeyFileName = "answers.txt";
   string contestAnsFileName = "contestant.txt";
   ifstream ansKeyFile, contestAnsFile;
 
@@ -160,7 +225,6 @@ int main() {
   // opening the filenames
   ansKeyFile.open(ansKeyFileName);
   contestAnsFile.open(contestAnsFileName);
-
 
   // checking if the files opened correctly
   if (!ansKeyFile.is_open()) {
@@ -176,7 +240,7 @@ int main() {
   // Figure out the number of answers/questions
   //  write a function to calculate the number of spaces in a line to then get
   //  the number of answers in that line
-  unsigned long numQuestions = 0;
+  int numQuestions = 0;
   char answer;
   while (ansKeyFile.get(answer)) {
     if (isAlphabet(answer)) {  // use isSpace function (better)?
@@ -199,7 +263,7 @@ int main() {
 
   // ****** saving the values of all the scores ******* //
   string fakeLine;
-  unsigned long numOfScores = 0;
+  int numOfScores = 0;
   while (getline(contestAnsFile, fakeLine)) {
     numOfScores++;
   }
@@ -213,10 +277,6 @@ int main() {
 
   // ****** read contestant's info ******* //
 
-  // creating a vector to store all wrong answer questions for 60% questions
-  // missed
-  vector<size_t> wrongAnsQuestions;
-
   string line;
   while (getline(contestAnsFile, line)) {
     size_t spacePos = line.find(' ');  // returns the index of the first time of
@@ -228,18 +288,19 @@ int main() {
     }
 
     string contestantID = line.substr(0, spacePos);
+    // cout << "Contestant Id:" << contestantID << endl;
 
     // create dynamic allocated array for contestant answers
     string *contestantAnswers = new string[numQuestions];
 
     /// add values in the dynamic array from each line
-    unsigned long x = 11;
+    int x = 11;
 
     // cout << "This is line:" << line << endl;
-    for (size_t i = 0; i < numQuestions; i++) {
+    for (int i = 0; i < numQuestions; i++) {
       // contestantAnswers[i] = line[x]; // going through a array of character
       // which is the string
-      *(contestantAnswers + i) = line.at(x);
+      contestantAnswers[i] = line.at(x);
       x = x + 2;
     }
 
@@ -255,41 +316,53 @@ int main() {
     cout << contestantID << " - " << fixed << setprecision(2) << score << endl;
 
     // Display wrong answers and correct answers
-    // TODO: Change all these displays to pointer arithmetic
 
-    // Question number of wrong answer
-    for (size_t i = 0; i < numQuestions; ++i) {
-      if (*(correctAnswers + i) != *(contestantAnswers + i)) {
+    // question number of wrong answer
+    for (int i = 0; i < numQuestions; ++i) {
+      if (correctAnswers[i] != contestantAnswers[i]) {
         cout << i + 1 << " ";
-        wrongAnsQuestions.push_back(i + 1);
       }
     }
     cout << endl;
 
-    // Wrong answers - from contestant
-    for (size_t i = 0; i < numQuestions; ++i) {
-      if (*(correctAnswers + i) != *(contestantAnswers + i)) {
-        cout << *(contestantAnswers + i) << " ";
+    // wrong answers
+    for (int i = 0; i < numQuestions; ++i) {
+      if (correctAnswers[i] != contestantAnswers[i]) {
+        cout << contestantAnswers[i] << " ";
       }
     }
     cout << endl;
 
-    // Right answers - from answer key
-    for (size_t i = 0; i < numQuestions; ++i) {
-      if (*(correctAnswers + i) != *(contestantAnswers + i)) {
-        cout << *(correctAnswers + i) << " ";
+    // right answers
+    for (int i = 0; i < numQuestions; ++i) {
+      if (correctAnswers[i] != contestantAnswers[i]) {
+        cout << correctAnswers[i] << " ";
       }
     }
     cout << endl;
 
     // Clean up contestant answers array
     delete[] contestantAnswers;
-  }
+  } // End of while
 
-  // make the printing modular - create a print function, cout the results there
+  // for loop to check the contestantScores array
+  /*
+ for (int i=0; i<numOfScores; i++){
+    cout <<  *(contestantScores + i) << endl;
+ }
+ */
+
   // calling the mean function and outputting the result
   double mean = calculateMean(contestantScores, numOfScores);
-  cout << endl << "Mean: " << mean << endl;
+  cout << "Mean: " << mean << endl;
+
+  // Output modes // Subrat: Commented below 6 Lines
+//   cout << "Number of modes: " << numModes << endl;
+//   cout << "Modes: ";
+//   for (int i = 0; i < numModes; ++i) {
+//     cout << modes[i] << " ";
+//   }
+//   cout << endl;
 
   // calling the median function and outputting the result
   double median = calculateMedian(contestantScores, numOfScores);
@@ -298,32 +371,14 @@ int main() {
   // calling the mode function
   // create a pointer variable to receive the pointer and create a forloop to
   // run through the mode dynamic array using a pointer,
-  long unsigned int numModes = 0;
-  double *modes = calculateMode(contestantScores, numOfScores, numModes);
-  cout << "Mode: ";
-  for (long unsigned i = 0; i < numModes; ++i) {
-    // 1. print the Mode
-    // cout << modes[i];
-    cout << *(modes + i);
+  int l_numModes{};
+  double* mode = calculateMode(contestantScores, numOfScores, l_numModes);
+  cout << "Mode(s): " << *mode << endl;
 
-    /* check if there are more elements
-     */
-
-    if (i < (numModes - 1)) {
-      cout << ", ";
-    } else {
-      cout << endl;
-    }
-  }
-  cout << endl;
-
-  // 60% plus missed question function calling
-  WrongQuestionFrequency(wrongAnsQuestions, numOfScores);
 
   // Clean up dynamic memory
   delete[] correctAnswers;
   delete[] contestantScores;
-  delete[] modes;
   // make sure to delete the dynamic arrays created in mode
 
   return 0;
